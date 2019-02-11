@@ -2,29 +2,42 @@ package com.andrea.com.popmovies;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.ViewHolder> {
-    Movie[] mData={};
-    Context context;
+    private Movie[] mData={};
 
-    //This String static is the base url for the poster url
-    private final static String POSTER_PATH = "http://image.tmdb.org/t/p";
-    private final static String POSTER_SIZE = "/w780/";
+    /*
+     * An on-click handler that we've defined to make it easy for an Activity to interface with
+     * our RecyclerView
+     */
+    private final clickHandler mClickHandler;
 
-    public GridViewAdapter(Context context) {
-        this.context = context;
+    /**
+     * Creates a ForecastAdapter.
+     *
+     * @param clickHandler The on-click handler for this adapter. This single handler is called
+     *                     when an item is clicked.
+     *
+     * @param context     Context when creating the adapter
+     */
+    public GridViewAdapter(Context context, clickHandler clickHandler) {
+
+        Context context1 = context;
+        this.mClickHandler = clickHandler;
+    }
+
+    /**
+     * The interface that receives onClick messages.
+     */
+    public interface clickHandler{
+        void onCLick (Movie movieSelected);
     }
 
     /**
@@ -58,8 +71,7 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.ViewHo
         int layoutResources = R.layout.item_list;
         View view = inflater.inflate(layoutResources,viewGroup,false);
 
-        ViewHolder vh = new ViewHolder(view);
-        return vh;
+        return new ViewHolder(view);
     }
 
     /**
@@ -74,7 +86,8 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.ViewHo
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(POSTER_PATH+POSTER_SIZE+mData[position].getMurl());
+        holder.bind(NetworkUtilities.POSTER_PATH
+                +NetworkUtilities.POSTER_SIZE+mData[position].getMurl());
     }
 
     /**
@@ -90,12 +103,20 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.ViewHo
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView posterHolder;
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        final ImageView posterHolder;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             posterHolder = itemView.findViewById(R.id.iv_holder);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v){
+            int adapterPosition = getAdapterPosition();
+            Movie movieSelected = mData[adapterPosition];
+            mClickHandler.onCLick(movieSelected);
         }
 
         void bind (String urlPoster){

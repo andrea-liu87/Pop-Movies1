@@ -1,39 +1,30 @@
 package com.andrea.com.popmovies;
 
-import android.media.Image;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    RecyclerView recyclerView;
-    GridViewAdapter mAdapter;
-    int columnNo = 2;
+public class MainActivity extends AppCompatActivity implements GridViewAdapter.clickHandler {
+    private GridViewAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView = findViewById(R.id.rv_numbers);
-        mAdapter = new GridViewAdapter(this);
+        RecyclerView recyclerView = findViewById(R.id.rv_numbers);
+        mAdapter = new GridViewAdapter(getApplicationContext(),this);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this,columnNo);
+        int columnNo = 2;
+        GridLayoutManager layoutManager = new GridLayoutManager(this, columnNo);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
@@ -41,7 +32,14 @@ public class MainActivity extends AppCompatActivity {
         new fetchMovieData().execute(NetworkUtilities.POPULAR);
     }
 
-    public class fetchMovieData extends AsyncTask<String, Void, Movie[]>{
+    @Override
+    public void onCLick(Movie movieSelected) {
+        Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+        intent.putExtra(Intent.EXTRA_PACKAGE_NAME, movieSelected);
+        startActivity(intent);
+    }
+
+    class fetchMovieData extends AsyncTask<String, Void, Movie[]>{
         @Override
         protected Movie[] doInBackground(String... modeData) {
 

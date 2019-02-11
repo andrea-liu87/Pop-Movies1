@@ -15,16 +15,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-public final class NetworkUtilities {
-
-    private static final String TAG = NetworkUtilities.class.getSimpleName();
+final class NetworkUtilities {
 
     //ALl static keyword to build the movie Api url
     private static final String BASE_URL = "http://api.themoviedb.org/3/movie";
     public static final String TOP_RATED = "top_rated";
     public static final String POPULAR = "popular";
     private static final String QUERY_PARAM = "api_key";
-    private static final String API_KEY = "bdee8dbf63a51b21beba2f6278f0cde3";
+    private static final String API_KEY = "";//please add api key here
 
     //All the static String keyword for Json parsing
     private static final String J_RESULT = "results";
@@ -33,6 +31,10 @@ public final class NetworkUtilities {
     private static final String J_OVERVIEW = "overview";
     private static final String J_USERRAT ="vote_average";
     private static final String J_RELDATE ="release_date";
+
+    //This String static is the base url for the poster url
+    public final static String POSTER_PATH = "http://image.tmdb.org/t/p";
+    public final static String POSTER_SIZE = "/w185/";
 
 
     /**
