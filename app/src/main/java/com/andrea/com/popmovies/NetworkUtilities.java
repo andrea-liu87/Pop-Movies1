@@ -22,7 +22,7 @@ final class NetworkUtilities {
     public static final String TOP_RATED = "top_rated";
     public static final String POPULAR = "popular";
     private static final String QUERY_PARAM = "api_key";
-    private static final String API_KEY = "";//please add api key here
+    private static final String API_KEY = BuildConfig.API_KEY;
 
     //All the static String keyword for Json parsing
     private static final String J_RESULT = "results";
@@ -36,6 +36,7 @@ final class NetworkUtilities {
     public final static String POSTER_PATH = "http://image.tmdb.org/t/p";
     public final static String POSTER_SIZE = "/w185/";
 
+    private NetworkUtilities(){}
 
     /**
      * Builds the URL used to retrieve the movie data. THe data
@@ -109,11 +110,11 @@ final class NetworkUtilities {
 
         for(int i =0; i< mResult.length(); i++){
             JSONObject object = mResult.getJSONObject(i);
-            String mTitle = object.getString(J_TITLE);
-            String murl = object.getString(J_POSTER);
-            String msynopsis = object.getString(J_OVERVIEW);
-            String mUserRat = object.getString(J_USERRAT);
-            String mRelDate = object.getString(J_RELDATE);
+            String mTitle = object.optString(J_TITLE);
+            String murl = object.optString(J_POSTER);
+            String msynopsis = object.optString(J_OVERVIEW);
+            String mUserRat = object.optString(J_USERRAT);
+            String mRelDate = object.optString(J_RELDATE);
 
             listmovie[i] = new Movie(mTitle, murl, msynopsis, mUserRat, mRelDate);
         }

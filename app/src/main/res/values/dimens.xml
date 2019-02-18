@@ -1,6 +1,5 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="paddingtopbtm">24dp</dimen>
+    <dimen name="paddingtopbtm">16dp</dimen>
     <dimen name="paddingleft">8dp</dimen>
 
     <dimen name="fontsizeTitle">42sp</dimen>

@@ -3,4 +3,11 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="rating">Rating : </string>
     <string name="release_date">Release date : </string>
+
+    <!-- Strings related to Settings -->
+    <string name="sort_order">Sort order :</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!--String related to menu-->
+    <string name="settings">Settings</string>
 </resources>
