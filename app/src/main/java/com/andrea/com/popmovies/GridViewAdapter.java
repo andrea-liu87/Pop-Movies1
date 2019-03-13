@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.andrea.com.popmovies.utilities.NetworkUtilities;
 import com.squareup.picasso.Picasso;
 
 public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.ViewHolder> {

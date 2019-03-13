@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".DetailActivity">
+    tools:context=".activity.DetailActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:paddingTop="@dimen/paddingtopbtm"
-        android:paddingBottom="@dimen/paddingtopbtm"
-        android:paddingLeft="@dimen/paddingleft"
-        android:paddingRight="@dimen/paddingleft"
+        android:background="@color/colorAccent"
+        android:paddingTop="@dimen/padding16"
+        android:paddingBottom="@dimen/padding16"
+        android:paddingLeft="@dimen/padding8"
+        android:paddingRight="@dimen/padding8"
         android:textSize="@dimen/fontsizeTitle"
         android:textColor="@android:color/background_light"
         android:id="@+id/detail_title"/>
@@ -38,42 +38,59 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/paddingleft"
-                    android:paddingTop="@dimen/paddingleft"
+                    android:paddingLeft="@dimen/padding8"
+                    android:paddingTop="@dimen/padding8"
                     android:adjustViewBounds="true" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/paddingleft"
-                    android:paddingTop="@dimen/paddingleft"
+                    android:paddingLeft="@dimen/padding8"
+                    android:paddingTop="@dimen/padding8"
                     android:layout_weight="1">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/Header2"
                         android:text="@string/release_date"
-                        android:layout_marginTop="@dimen/paddingleft"
-                        android:layout_marginBottom="@dimen/paddingleft"
+                        android:id="@+id/detail_reldate_label"/>
+
+                    <TextView
+                        style="@style/Content"
                         android:id="@+id/detail_reldate"/>
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/paddingleft"
-                        android:layout_marginBottom="@dimen/paddingleft"
+                        style="@style/Header2"
                         android:text="@string/rating"
+                        android:id="@+id/detail_rating_label"/>
+
+                    <TextView
+                        style="@style/Content"
                         android:id="@+id/detail_rating"/>
                 </LinearLayout>
             </LinearLayout>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/paddingleft"
-                android:paddingTop="@dimen/paddingleft"
+                style="@style/Content"
                 android:id="@+id/detail_synopsis"/>
+
+            <TextView
+                style="@style/Header2"
+                android:id="@+id/detail_review_label"
+                android:text="@string/detail_review_label"/>
+
+            <TextView
+                style="@style/Content"
+                android:id="@+id/detail_review"/>
+
+            <TextView
+                style="@style/Header2"
+                android:id="@+id/detail_trailer_label"
+                android:text="@string/detail_trailer_label"/>
+
+            <TextView
+                style="@style/Content"
+                android:id="@+id/detail_trailer"/>
         </LinearLayout>
 
     </ScrollView>

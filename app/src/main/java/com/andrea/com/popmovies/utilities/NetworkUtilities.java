@@ -1,8 +1,11 @@
-package com.andrea.com.popmovies;
+package com.andrea.com.popmovies.utilities;
 
 import android.content.Context;
 import android.net.Uri;
 import android.widget.Toast;
+
+import com.andrea.com.popmovies.BuildConfig;
+import com.andrea.com.popmovies.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-final class NetworkUtilities {
+public final class NetworkUtilities {
 
     //ALl static keyword to build the movie Api url
     private static final String BASE_URL = "http://api.themoviedb.org/3/movie";

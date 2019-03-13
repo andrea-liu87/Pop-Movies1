@@ -8,9 +8,28 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+
+    <!--Style for movie title-->
+    <style name="Title"></style>
+
+    <!--Style for each sub-header-->
+    <style name="Header2">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/padding8</item>
+        <item name="android:layout_marginBottom">@dimen/padding4</item>
+        <item name="android:paddingLeft">@dimen/padding8</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/fontSizeSub</item>
     </style>
+
+    <!--Style for content and review-->
+    <style name="Content" parent="Header2">
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:textColor">#212121</item>
+    </style>
+
+    <!--Style for trailer-->
+    <style name="trailer"></style>
 
 </resources>

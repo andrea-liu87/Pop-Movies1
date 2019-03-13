@@ -1,6 +1,7 @@
 <resources>
-    <dimen name="paddingtopbtm">16dp</dimen>
-    <dimen name="paddingleft">8dp</dimen>
-
+    <dimen name="padding16">16dp</dimen>
+    <dimen name="padding8">8dp</dimen>
+    <dimen name="padding4">4sp</dimen>
     <dimen name="fontsizeTitle">42sp</dimen>
+    <dimen name="fontSizeSub">16sp</dimen>
 </resources>

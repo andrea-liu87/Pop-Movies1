@@ -14,16 +14,16 @@
         android:usesCleartextTraffic="true">
 
         <activity
-            android:name=".DetailActivity"
+            android:name=".activity.DetailActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.andrea.com.popmovies.MainActivity" />
+                android:value="com.andrea.com.popmovies.activity.MainActivity" />
         </activity>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -16,7 +16,7 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.sort_order));
-        builder.setItems(R.array.settingss_array, new DialogInterface.OnClickListener() {
+        builder.setItems(R.array.settings_array, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 passData passData = (DialogFragment.passData) getActivity();
@@ -26,8 +26,8 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
                 if(which == 1){
                     passData.onSelectedSortOrder(1);
                 }
-                else{
-                    passData.onSelectedSortOrder(99);
+                if(which == 2){
+                    passData.onSelectedSortOrder(2);
                 }
             }
         });

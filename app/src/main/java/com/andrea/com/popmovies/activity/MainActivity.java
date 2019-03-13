@@ -1,30 +1,36 @@
-package com.andrea.com.popmovies;
+package com.andrea.com.popmovies.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.andrea.com.popmovies.DialogFragment;
+import com.andrea.com.popmovies.GridViewAdapter;
+import com.andrea.com.popmovies.Movie;
+import com.andrea.com.popmovies.R;
+import com.andrea.com.popmovies.data.AppDatabase;
+import com.andrea.com.popmovies.data.AppExecutors;
+import com.andrea.com.popmovies.utilities.NetworkUtilities;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class MainActivity extends AppCompatActivity implements GridViewAdapter.clickHandler,
-DialogFragment.passData{
+        DialogFragment.passData {
 
     private GridViewAdapter mAdapter;
+    private AppDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,8 @@ DialogFragment.passData{
         recyclerView.setAdapter(mAdapter);
 
         new fetchMovieData().execute(NetworkUtilities.POPULAR);
+
+        mDb = AppDatabase.getInstance(getApplicationContext());
     }
 
 
@@ -52,6 +60,7 @@ DialogFragment.passData{
     }
 
 
+    //TODO 1 change into AsyncTask Loader
     //This inner class is responsible for download data and set it to Main Activity
     class fetchMovieData extends AsyncTask<String, Void, Movie[]>{
         @Override
@@ -109,9 +118,25 @@ DialogFragment.passData{
         if(selectedData ==1){
             new fetchMovieData().execute(NetworkUtilities.TOP_RATED);
         }
-        if(selectedData == 99){
-            Toast.makeText(getApplicationContext(), "No selection from sort order", Toast.LENGTH_LONG)
-                    .show();
+        if(selectedData == 2){
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    final Movie[] listMovies = mDb.tableDao().loadAllMovies();
+                    Log.i("RESULT:", listMovies.toString());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (listMovies == null){
+                                Log.i("tag","table is null");
+                            }
+                            //Dear mentor something wrong around this line
+                            mAdapter.setData(listMovies);
+                        }
+                    });
+                }
+            });
         }
     }
+
 }
