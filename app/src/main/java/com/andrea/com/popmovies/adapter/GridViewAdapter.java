@@ -1,4 +1,4 @@
-package com.andrea.com.popmovies;
+package com.andrea.com.popmovies.adapter;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.andrea.com.popmovies.Movie;
+import com.andrea.com.popmovies.R;
 import com.andrea.com.popmovies.utilities.NetworkUtilities;
 import com.squareup.picasso.Picasso;
 

@@ -10,11 +10,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.andrea.com.popmovies.DialogFragment;
-import com.andrea.com.popmovies.GridViewAdapter;
 import com.andrea.com.popmovies.Movie;
 import com.andrea.com.popmovies.R;
-import com.andrea.com.popmovies.data.AppDatabase;
-import com.andrea.com.popmovies.data.AppExecutors;
+import com.andrea.com.popmovies.adapter.GridViewAdapter;
+import com.andrea.com.popmovies.data.MainViewModel;
 import com.andrea.com.popmovies.utilities.NetworkUtilities;
 
 import org.json.JSONException;
@@ -23,6 +22,8 @@ import java.io.IOException;
 import java.net.URL;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +31,8 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
         DialogFragment.passData {
 
     private GridViewAdapter mAdapter;
-    private AppDatabase mDb;
+
+    private int mode; //Mode 0=Popular, 1=Top rated, 2= favorites
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +48,23 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
 
-        new fetchMovieData().execute(NetworkUtilities.POPULAR);
+        executeBaseSelection(0);
+    }
 
-        mDb = AppDatabase.getInstance(getApplicationContext());
+    private void setupViewModel(){
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getListMovies().observe(this, new Observer<Movie[]>() {
+            @Override
+            public void onChanged(Movie[] movies) {
+                if(movies == null){
+                    Toast.makeText(getApplicationContext(),"No movie on your favorite list",Toast.LENGTH_LONG).show();
+                    mode = 0;
+                    executeBaseSelection(mode);
+                } else {
+                    mAdapter.setData(movies);
+                }
+            }
+        });
     }
 
 
@@ -60,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
     }
 
 
-    //TODO 1 change into AsyncTask Loader
     //This inner class is responsible for download data and set it to Main Activity
     class fetchMovieData extends AsyncTask<String, Void, Movie[]>{
         @Override
@@ -112,30 +127,19 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
     //This interface method is passing data from DialogFragment on the sortorder selection
     @Override
     public void onSelectedSortOrder(int selectedData) {
-        if(selectedData == 0){
+        mode = selectedData;
+        executeBaseSelection(mode);
+    }
+
+    private void executeBaseSelection (int selectedMode) {
+        if (selectedMode == 0) {
             new fetchMovieData().execute(NetworkUtilities.POPULAR);
         }
-        if(selectedData ==1){
+        if (selectedMode == 1) {
             new fetchMovieData().execute(NetworkUtilities.TOP_RATED);
         }
-        if(selectedData == 2){
-            AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                @Override
-                public void run() {
-                    final Movie[] listMovies = mDb.tableDao().loadAllMovies();
-                    Log.i("RESULT:", listMovies.toString());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (listMovies == null){
-                                Log.i("tag","table is null");
-                            }
-                            //Dear mentor something wrong around this line
-                            mAdapter.setData(listMovies);
-                        }
-                    });
-                }
-            });
+        if (selectedMode == 2) {
+            setupViewModel();
         }
     }
 

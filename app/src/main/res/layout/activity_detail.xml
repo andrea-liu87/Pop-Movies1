@@ -79,18 +79,20 @@
                 android:id="@+id/detail_review_label"
                 android:text="@string/detail_review_label"/>
 
-            <TextView
-                style="@style/Content"
-                android:id="@+id/detail_review"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_review"/>
 
             <TextView
                 style="@style/Header2"
                 android:id="@+id/detail_trailer_label"
                 android:text="@string/detail_trailer_label"/>
 
-            <TextView
-                style="@style/Content"
-                android:id="@+id/detail_trailer"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_trailer"/>
         </LinearLayout>
 
     </ScrollView>

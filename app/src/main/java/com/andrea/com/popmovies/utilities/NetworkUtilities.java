@@ -1,6 +1,7 @@
 package com.andrea.com.popmovies.utilities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ public final class NetworkUtilities {
     public static final String TOP_RATED = "top_rated";
     public static final String POPULAR = "popular";
     private static final String QUERY_PARAM = "api_key";
+    private static final String REVIEW_PARAM ="reviews";
     private static final String API_KEY = BuildConfig.API_KEY;
 
     //All the static String keyword for Json parsing
@@ -34,6 +36,8 @@ public final class NetworkUtilities {
     private static final String J_OVERVIEW = "overview";
     private static final String J_USERRAT ="vote_average";
     private static final String J_RELDATE ="release_date";
+    private static final String J_ID = "id";
+    private static final String J_CONTENT = "content";
 
     //This String static is the base url for the poster url
     public final static String POSTER_PATH = "http://image.tmdb.org/t/p";
@@ -51,6 +55,30 @@ public final class NetworkUtilities {
     public static URL buildUrl(String mode){
         Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                 .appendPath(mode)
+                .appendQueryParameter(QUERY_PARAM, API_KEY)
+                .build();
+
+        URL url = null;
+
+        try {
+            url = new URL (builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    /**
+     * Builds the URL used to retrieve the movie review data.
+     *
+     * @param moviedId id of movie from the movieDb.
+     * @return The URL to use to query the movie data.
+     */
+    public static URL buildUrlforReview(int moviedId){
+        Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                .appendPath(Integer.toString(moviedId))
+                .appendPath(REVIEW_PARAM)
                 .appendQueryParameter(QUERY_PARAM, API_KEY)
                 .build();
 
@@ -103,7 +131,6 @@ public final class NetworkUtilities {
      */
     public static Movie[] jsonParsing(Context context, String rawJsonData) throws JSONException {
        if(rawJsonData == null){
-           Toast.makeText(context,"No Json data from server",Toast.LENGTH_LONG).show();
            return null;
        }
 
@@ -118,10 +145,40 @@ public final class NetworkUtilities {
             String msynopsis = object.optString(J_OVERVIEW);
             String mUserRat = object.optString(J_USERRAT);
             String mRelDate = object.optString(J_RELDATE);
+            int mid = object.optInt(J_ID);
 
-            listmovie[i] = new Movie(mTitle, murl, msynopsis, mUserRat, mRelDate);
+            listmovie[i] = new Movie(mid, mTitle, murl, msynopsis, mUserRat, mRelDate);
         }
 
         return listmovie;
+    }
+
+    /**
+     * This method parses JSON from a web response and returns an array of String review
+     * as structure data.
+     *
+     * @param rawJsonData JSON response from server
+     *
+     * @return Array of String (reviews)
+     *
+     * @throws JSONException If JSON data cannot be properly parsed
+     */
+    public static String[] jsonParsingGetReview(Context context, String rawJsonData) throws JSONException {
+        if(rawJsonData == null){
+            return null;
+        }
+
+        JSONObject wholeData = new JSONObject(rawJsonData);
+        JSONArray mResult = wholeData.getJSONArray(J_RESULT);
+        String[] listreviews = new String[mResult.length()];
+
+        for(int i =0; i< mResult.length(); i++){
+            JSONObject object = mResult.getJSONObject(i);
+            String content = object.optString(J_CONTENT);
+
+            listreviews[i] = content;
+        }
+
+        return listreviews;
     }
 }

@@ -11,26 +11,17 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "movies_table")
 public class Movie implements Parcelable {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private int mid;
-
     private final String mtitle;
     private String murl;
     private String msynopsis;
     private String muserrating;
     private String mreleasedate;
 
-    @Ignore
-    public Movie(String mtitle, String murl, String msynopsis, String muserRating, String mReleaseDate) {
-        this.mtitle = mtitle;
-        this.murl = murl;
-        this.msynopsis = msynopsis;
-        this.muserrating = muserRating;
-        this.mreleasedate = mReleaseDate;
-    }
-
     public Movie(int mid, String mtitle,String murl, String msynopsis, String muserrating, String mreleasedate) {
         this.mid = mid;
+        this.murl = murl;
         this.mtitle = mtitle;
         this.msynopsis = msynopsis;
         this.muserrating = muserrating;
