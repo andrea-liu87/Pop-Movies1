@@ -26,7 +26,8 @@ public final class NetworkUtilities {
     public static final String TOP_RATED = "top_rated";
     public static final String POPULAR = "popular";
     private static final String QUERY_PARAM = "api_key";
-    private static final String REVIEW_PARAM ="reviews";
+    private static final String REVIEW ="reviews";
+    private static final String VIDEOS = "videos";
     private static final String API_KEY = BuildConfig.API_KEY;
 
     //All the static String keyword for Json parsing
@@ -38,10 +39,14 @@ public final class NetworkUtilities {
     private static final String J_RELDATE ="release_date";
     private static final String J_ID = "id";
     private static final String J_CONTENT = "content";
+    private static final String J_KEY = "key";
 
     //This String static is the base url for the poster url
     public final static String POSTER_PATH = "http://image.tmdb.org/t/p";
     public final static String POSTER_SIZE = "/w185/";
+
+    //Basic url for youtube video
+    public static final String YOUTUBE = "https://www.youtube.com/watch?v=";
 
     private NetworkUtilities(){}
 
@@ -78,7 +83,30 @@ public final class NetworkUtilities {
     public static URL buildUrlforReview(int moviedId){
         Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                 .appendPath(Integer.toString(moviedId))
-                .appendPath(REVIEW_PARAM)
+                .appendPath(REVIEW)
+                .appendQueryParameter(QUERY_PARAM, API_KEY)
+                .build();
+
+        URL url = null;
+
+        try {
+            url = new URL (builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    /**
+     * THis method will generate url for fetching trailer video
+     * @param moviedId
+     * @return URL
+     */
+    public static URL buildUrlforVideo(int moviedId){
+        Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                .appendPath(Integer.toString(moviedId))
+                .appendPath(VIDEOS)
                 .appendQueryParameter(QUERY_PARAM, API_KEY)
                 .build();
 
@@ -180,5 +208,31 @@ public final class NetworkUtilities {
         }
 
         return listreviews;
+    }
+
+    /**
+     * THis method will parse the raw JSON data to get the end ey of trailer video url
+     * @param context
+     * @param rawJsonData
+     * @return String[] listofEndUrl
+     * @throws JSONException
+     */
+    public static String[] jsonParsingGetVideo(Context context, String rawJsonData) throws JSONException {
+        if(rawJsonData == null){
+            return null;
+        }
+
+        JSONObject wholeData = new JSONObject(rawJsonData);
+        JSONArray mResult = wholeData.getJSONArray(J_RESULT);
+        String[] listvideoUrl = new String[mResult.length()];
+
+        for(int i =0; i< mResult.length(); i++){
+            JSONObject object = mResult.getJSONObject(i);
+            String content = object.optString(J_KEY);
+
+            listvideoUrl[i] = content;
+        }
+
+        return listvideoUrl;
     }
 }

@@ -1,6 +1,8 @@
 package com.andrea.com.popmovies.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +27,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 import androidx.annotation.NonNull;
@@ -37,7 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements TrailerAdapter.clickHandler {
     @BindView(R.id.detail_title) TextView mTitle;
     @BindView(R.id.detail_reldate) TextView mRelDate;
     @BindView(R.id.detail_rating) TextView mRating;
@@ -78,6 +82,18 @@ public class DetailActivity extends AppCompatActivity {
                 .into(mPoster);
 
         generateReviewRecylView();
+        generateTrailerRecylView(getApplicationContext());
+    }
+
+    @Override
+    public void onCLick(String trailerUrl) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri url = Uri.parse(NetworkUtilities.YOUTUBE+trailerUrl).buildUpon()
+            .build();
+        intent.setData(url);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     //Menu related operation
@@ -128,7 +144,6 @@ public class DetailActivity extends AppCompatActivity {
             movieret.observe(this, new Observer<Movie>() {
                 @Override
                 public void onChanged(Movie movie) {
-                    movieret.removeObserver(this);
                     if (movie != null){
                             isFav = true;
                             Log.d(LOG_TAG, movie.getMtitle() + " is inside fav list");
@@ -153,6 +168,19 @@ public class DetailActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
         new fetchReviewData().execute(movie.getMid());
     }
+
+    private void generateTrailerRecylView (Context context){
+        RecyclerView recyclerView = findViewById(R.id.rv_trailer);
+        mTrailerAdapter = new TrailerAdapter(context,this);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(mTrailerAdapter);
+        new fetchVideoData().execute(movie.getMid());
+    }
+
+
 
 
     //This inner class is responsible for download review data and set it to Main Activity
@@ -181,6 +209,37 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String[] reviews) {
             mAdapter.setData(reviews);
+        }
+    }
+
+    /**
+     * This class to fetch data for trailer on background thread
+     */
+    class fetchVideoData extends AsyncTask<Integer, Void, String[]> {
+        @Override
+        protected String[] doInBackground(Integer... movieId) {
+
+            URL url = NetworkUtilities.buildUrlforVideo(movieId[0]);
+            String jsonData = null;
+
+            try {
+                jsonData = NetworkUtilities.getResponseFromHttpUrl(url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String[] listVideo = {};
+            try {
+                listVideo = NetworkUtilities.jsonParsingGetVideo(getApplicationContext(),jsonData);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return listVideo;
+        }
+
+        @Override
+        protected void onPostExecute(String[] videos) {
+            mTrailerAdapter.setData(videos);
         }
     }
 }

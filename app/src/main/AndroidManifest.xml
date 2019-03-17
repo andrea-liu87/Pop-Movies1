@@ -21,6 +21,12 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.andrea.com.popmovies.activity.MainActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <data android:scheme="http" android:host="www.youtube.com" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".activity.MainActivity"

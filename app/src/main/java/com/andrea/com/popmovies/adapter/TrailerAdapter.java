@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andrea.com.popmovies.R;
@@ -30,7 +29,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getTextView().setText("Trailer "+Integer.toString(position));
+        holder.getTextView().setText("Trailer "+Integer.toString(position+1));
     }
 
     @Override
@@ -40,7 +39,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
     }
 
     public interface clickHandler{
-        void onCLick (String trailerSelected);
+        void onCLick (String trailerUrl);
     }
 
     /**
@@ -52,14 +51,20 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
         notifyDataSetChanged();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private final TextView textView;
-        private final ImageView playIcon;
 
         public ViewHolder(View v) {
             super(v);
-            textView = (TextView) v.findViewById(R.id.iv_trailer_holder);
-            playIcon = (ImageView) v.findViewById(R.id.iv_play_button);}
+            textView = (TextView) v.findViewById(R.id.iv_string_holder);
+            v.setOnClickListener(this);}
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            String url = urls[position];
+            mClickHandler.onCLick(url);
+        }
 
         public TextView getTextView() { return textView; }
     }

@@ -30,7 +30,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ViewHolde
     @Override
     public int getItemCount() {
         if(mDataSet == null){return 0;}
-        return mDataSet.length; }
+        if (mDataSet.length <= 3){return mDataSet.length;}
+        else {return 3;} }
 
     public void setData (String[] newData){
         mDataSet = newData;
