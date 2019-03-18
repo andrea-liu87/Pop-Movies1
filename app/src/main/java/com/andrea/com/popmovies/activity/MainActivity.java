@@ -1,15 +1,17 @@
 package com.andrea.com.popmovies.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.andrea.com.popmovies.DialogFragment;
 import com.andrea.com.popmovies.Movie;
 import com.andrea.com.popmovies.R;
 import com.andrea.com.popmovies.adapter.GridViewAdapter;
@@ -20,6 +22,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -28,19 +31,22 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity implements GridViewAdapter.clickHandler,
-        DialogFragment.passData {
+        SharedPreferences.OnSharedPreferenceChangeListener{
 
     private GridViewAdapter mAdapter;
 
     private int mode; //Mode 0=Popular, 1=Top rated, 2= favorites
+    private final String BUNDLER_RECYCLER = "classname.recycler.layout";
+    Parcelable msavedInstance;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RecyclerView recyclerView = findViewById(R.id.rv_numbers);
-        mAdapter = new GridViewAdapter(getApplicationContext(),this);
+        recyclerView = findViewById(R.id.rv_numbers);
+        mAdapter = new GridViewAdapter(this);
 
         int columnNo = 2;
         GridLayoutManager layoutManager = new GridLayoutManager(this, columnNo);
@@ -48,8 +54,9 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
 
-        executeBaseSelection(0);
+        executeBaseSelection(getPrefMode());
     }
+
 
     private void setupViewModel(){
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
@@ -92,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
 
             Movie[] listMovie = {};
             try {
-                listMovie = NetworkUtilities.jsonParsing(getApplicationContext(),jsonData);
+                listMovie = NetworkUtilities.jsonParsing(jsonData);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -102,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
         @Override
         protected void onPostExecute(Movie[] movies) {
             mAdapter.setData(movies);
+            recyclerView.getLayoutManager().onRestoreInstanceState(msavedInstance);
         }
     }
 
@@ -118,17 +126,32 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_settings){
-           new DialogFragment().show(getSupportFragmentManager(), getLocalClassName());
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+           //new DialogFragment().show(getSupportFragmentManager(), getLocalClassName());
         }
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * This method will register the OnSharedPreferenceListener and get movie mode
+     * @return movie mode
+     */
+    private int getPrefMode(){
+        SharedPreferences sharedPreference = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreference.registerOnSharedPreferenceChangeListener(this);
+        String mode = sharedPreference.getString(getString(R.string.pref_list_key),getString(R.string.pref_popular));
+        if (Objects.requireNonNull(mode).equals(getString(R.string.pref_top_rated))){return 1;}
+        else if (mode.equals(getString(R.string.pref_favorite))){return 2;}
+        else {return 0;}
+    }
 
-    //This interface method is passing data from DialogFragment on the sortorder selection
     @Override
-    public void onSelectedSortOrder(int selectedData) {
-        mode = selectedData;
-        executeBaseSelection(mode);
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        String mode = sharedPreferences.getString(getString(R.string.pref_list_key),key);
+        if (Objects.requireNonNull(mode).equals(getString(R.string.pref_top_rated))){executeBaseSelection(1);}
+        else if (mode.equals(getString(R.string.pref_favorite))){executeBaseSelection(2);}
+        else {executeBaseSelection(0);}
     }
 
     private void executeBaseSelection (int selectedMode) {
@@ -143,4 +166,25 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    //To retain same scroll position when configuration change
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(BUNDLER_RECYCLER, recyclerView.getLayoutManager().onSaveInstanceState());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState != null){
+            msavedInstance = savedInstanceState.getParcelable(BUNDLER_RECYCLER);
+        }
+    }
 }

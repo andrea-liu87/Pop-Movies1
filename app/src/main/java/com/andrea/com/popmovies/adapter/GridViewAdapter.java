@@ -24,13 +24,12 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.ViewHo
 
     /**
      * Creates a ForecastAdapter.
-     *
-     * @param clickHandler The on-click handler for this adapter. This single handler is called
+     *  @param clickHandler The on-click handler for this adapter. This single handler is called
      *                     when an item is clicked.
      *
-     * @param context     Context when creating the adapter
+     *
      */
-    public GridViewAdapter(Context context, clickHandler clickHandler) {
+    public GridViewAdapter(clickHandler clickHandler) {
 
         this.mClickHandler = clickHandler;
     }

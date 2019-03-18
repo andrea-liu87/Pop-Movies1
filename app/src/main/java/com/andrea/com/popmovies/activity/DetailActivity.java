@@ -6,12 +6,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,11 +24,9 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
+import java.util.Objects;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -63,7 +58,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
 
         movie = getIntent().getParcelableExtra(Intent.EXTRA_PACKAGE_NAME);
 
@@ -108,7 +103,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.detail_favorite && isFav == false){
+        if(item.getItemId() == R.id.detail_favorite && !isFav){
             item.setIcon(R.drawable.ic_favourite_color);
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
@@ -118,7 +113,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 }
             });
         }
-        if(item.getItemId() == R.id.detail_favorite && isFav == true){
+        if(item.getItemId() == R.id.detail_favorite && isFav){
             item.setIcon(R.drawable.ic_favourite_white);
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
@@ -136,7 +131,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     /**
      * This method will check whether the movie is in Favorite list
-     * @param id
+     * @param id the movied id
      */
     private void isFavMovie (int id){
         try {
@@ -171,7 +166,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     private void generateTrailerRecylView (Context context){
         RecyclerView recyclerView = findViewById(R.id.rv_trailer);
-        mTrailerAdapter = new TrailerAdapter(context,this);
+        mTrailerAdapter = new TrailerAdapter(this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
@@ -179,8 +174,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         recyclerView.setAdapter(mTrailerAdapter);
         new fetchVideoData().execute(movie.getMid());
     }
-
-
 
 
     //This inner class is responsible for download review data and set it to Main Activity
@@ -199,7 +192,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
             String[] listReview = {};
             try {
-                listReview = NetworkUtilities.jsonParsingGetReview(getApplicationContext(),jsonData);
+                listReview = NetworkUtilities.jsonParsingGetReview(jsonData);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -230,7 +223,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
             String[] listVideo = {};
             try {
-                listVideo = NetworkUtilities.jsonParsingGetVideo(getApplicationContext(),jsonData);
+                listVideo = NetworkUtilities.jsonParsingGetVideo(jsonData);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

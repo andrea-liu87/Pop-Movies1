@@ -42,10 +42,10 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ViewHolde
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
-            textView = (TextView) v.findViewById(R.id.iv_review_holder); }
+            textView = v.findViewById(R.id.iv_review_holder); }
 
-        public TextView getTextView() { return textView; }
+        TextView getTextView() { return textView; }
     }
 }

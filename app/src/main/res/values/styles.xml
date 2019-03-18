@@ -8,10 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-
-    <!--Style for movie title-->
-    <style name="Title"></style>
-
     <!--Style for each sub-header-->
     <style name="Header2">
         <item name="android:layout_width">wrap_content</item>
@@ -28,8 +24,5 @@
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:textColor">#212121</item>
     </style>
-
-    <!--Style for trailer-->
-    <style name="trailer"></style>
 
 </resources>

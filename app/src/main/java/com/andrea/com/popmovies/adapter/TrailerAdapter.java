@@ -16,7 +16,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
 
     private final clickHandler mClickHandler;
 
-    public TrailerAdapter (Context context, clickHandler clickHandler){
+    public TrailerAdapter(clickHandler clickHandler){
         this.mClickHandler = clickHandler;
     }
 
@@ -54,9 +54,9 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private final TextView textView;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
-            textView = (TextView) v.findViewById(R.id.iv_string_holder);
+            textView = v.findViewById(R.id.iv_string_holder);
             v.setOnClickListener(this);}
 
         @Override
@@ -66,6 +66,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
             mClickHandler.onCLick(url);
         }
 
-        public TextView getTextView() { return textView; }
+        TextView getTextView() { return textView; }
     }
 }

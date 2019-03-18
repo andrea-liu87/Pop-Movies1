@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 
@@ -68,10 +67,6 @@ public class Movie implements Parcelable {
         return mid;
     }
 
-    public void setMid(int mid) {
-        this.mid = mid;
-    }
-
     public String getMtitle() {
         return mtitle;
     }
@@ -92,21 +87,8 @@ public class Movie implements Parcelable {
         return mreleasedate;
     }
 
-    public void setMurl(String murl) { this.murl = murl; }
-
-    public void setMsynopsis(String msynopsis) {
-        this.msynopsis = msynopsis;
-    }
-
-    public void setMuserrating(String muserrating) {
-        this.muserrating = muserrating;
-    }
-
     public String getMreleasedate() {
         return mreleasedate;
     }
 
-    public void setMreleasedate(String mreleasedate) {
-        this.mreleasedate = mreleasedate;
-    }
 }

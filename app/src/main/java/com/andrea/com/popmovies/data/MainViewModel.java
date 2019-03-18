@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData;
 
 public class MainViewModel extends AndroidViewModel {
 
-    LiveData<Movie []> listMovies;
+    private final LiveData<Movie []> listMovies;
 
     public MainViewModel (Application application){
         super (application);

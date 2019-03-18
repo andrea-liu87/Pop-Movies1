@@ -1,9 +1,6 @@
 package com.andrea.com.popmovies.utilities;
 
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
-import android.widget.Toast;
 
 import com.andrea.com.popmovies.BuildConfig;
 import com.andrea.com.popmovies.Movie;
@@ -48,7 +45,6 @@ public final class NetworkUtilities {
     //Basic url for youtube video
     public static final String YOUTUBE = "https://www.youtube.com/watch?v=";
 
-    private NetworkUtilities(){}
 
     /**
      * Builds the URL used to retrieve the movie data. THe data
@@ -157,7 +153,7 @@ public final class NetworkUtilities {
      *
      * @throws JSONException If JSON data cannot be properly parsed
      */
-    public static Movie[] jsonParsing(Context context, String rawJsonData) throws JSONException {
+    public static Movie[] jsonParsing(String rawJsonData) throws JSONException {
        if(rawJsonData == null){
            return null;
        }
@@ -191,7 +187,7 @@ public final class NetworkUtilities {
      *
      * @throws JSONException If JSON data cannot be properly parsed
      */
-    public static String[] jsonParsingGetReview(Context context, String rawJsonData) throws JSONException {
+    public static String[] jsonParsingGetReview(String rawJsonData) throws JSONException {
         if(rawJsonData == null){
             return null;
         }
@@ -212,12 +208,11 @@ public final class NetworkUtilities {
 
     /**
      * THis method will parse the raw JSON data to get the end ey of trailer video url
-     * @param context
      * @param rawJsonData
      * @return String[] listofEndUrl
      * @throws JSONException
      */
-    public static String[] jsonParsingGetVideo(Context context, String rawJsonData) throws JSONException {
+    public static String[] jsonParsingGetVideo(String rawJsonData) throws JSONException {
         if(rawJsonData == null){
             return null;
         }
