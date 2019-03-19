@@ -3,9 +3,9 @@ package com.andrea.com.popmovies.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
 
     private int mode; //Mode 0=Popular, 1=Top rated, 2= favorites
     private final String BUNDLER_RECYCLER = "classname.recycler.layout";
-    Parcelable msavedInstance;
+    private Parcelable msavedInstance;
     private RecyclerView recyclerView;
 
     @Override
@@ -60,16 +60,13 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
 
     private void setupViewModel(){
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        viewModel.getListMovies().observe(this, new Observer<Movie[]>() {
-            @Override
-            public void onChanged(Movie[] movies) {
-                if(movies == null){
-                    Toast.makeText(getApplicationContext(),"No movie on your favorite list",Toast.LENGTH_LONG).show();
-                    mode = 0;
-                    executeBaseSelection(mode);
-                } else {
-                    mAdapter.setData(movies);
-                }
+        viewModel.getListMovies().observe(this, movies -> {
+            if(movies == null){
+                Toast.makeText(getApplicationContext(),"No movie on your favorite list",Toast.LENGTH_LONG).show();
+                mode = 0;
+                executeBaseSelection(mode);
+            } else {
+                mAdapter.setData(movies);
             }
         });
     }
@@ -109,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
         @Override
         protected void onPostExecute(Movie[] movies) {
             mAdapter.setData(movies);
-            recyclerView.getLayoutManager().onRestoreInstanceState(msavedInstance);
+            Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(msavedInstance);
         }
     }
 
@@ -128,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
         if(item.getItemId() == R.id.menu_settings){
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
-           //new DialogFragment().show(getSupportFragmentManager(), getLocalClassName());
         }
         return super.onOptionsItemSelected(item);
     }
@@ -176,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements GridViewAdapter.c
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(BUNDLER_RECYCLER, recyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable(BUNDLER_RECYCLER, Objects.requireNonNull(recyclerView.getLayoutManager()).onSaveInstanceState());
     }
 
     @Override

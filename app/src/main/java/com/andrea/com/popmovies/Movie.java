@@ -11,12 +11,12 @@ import androidx.room.PrimaryKey;
 public class Movie implements Parcelable {
 
     @PrimaryKey
-    private int mid;
+    private final int mid;
     private final String mtitle;
-    private String murl;
-    private String msynopsis;
-    private String muserrating;
-    private String mreleasedate;
+    private final String murl;
+    private final String msynopsis;
+    private final String muserrating;
+    private final String mreleasedate;
 
     public Movie(int mid, String mtitle,String murl, String msynopsis, String muserrating, String mreleasedate) {
         this.mid = mid;

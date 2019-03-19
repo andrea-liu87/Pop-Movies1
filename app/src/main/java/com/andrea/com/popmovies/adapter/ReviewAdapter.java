@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.andrea.com.popmovies.R;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ViewHolder> {
@@ -15,15 +16,16 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ViewHolde
 
     public ReviewAdapter(String[] dataSet) { mDataSet = dataSet; }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_list_review, viewGroup, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int position) {
         viewHolder.getTextView().setText(mDataSet[position]);
     }
 

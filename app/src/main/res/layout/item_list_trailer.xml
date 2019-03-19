@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_media_play"
         android:id="@+id/iv_play_button"
-        style="@style/Content"/>
+        style="@style/Content"
+        android:contentDescription="TODO" />
 
     <TextView
         android:layout_width="match_parent"

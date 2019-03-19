@@ -65,8 +65,9 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.ViewHo
      *                  for more details.
      * @return A new ViewHolder that holds the View for each list item
      */
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         Context context =viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         int layoutResources = R.layout.item_list;

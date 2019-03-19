@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -60,7 +61,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
 
-        movie = getIntent().getParcelableExtra(Intent.EXTRA_PACKAGE_NAME);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            movie = getIntent().getParcelableExtra(Intent.EXTRA_PACKAGE_NAME);
+        }
 
         mDatabase = AppDatabase.getInstance(getApplicationContext());
         isFavMovie(movie.getMid());
@@ -105,22 +108,16 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.detail_favorite && !isFav){
             item.setIcon(R.drawable.ic_favourite_color);
-            AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                @Override
-                public void run() {
-                    mDatabase.tableDao().insertMovie(movie);
-                    Log.i(LOG_TAG,"Insert movie to table is done");
-                }
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                mDatabase.tableDao().insertMovie(movie);
+                Log.i(LOG_TAG,"Insert movie to table is done");
             });
         }
         if(item.getItemId() == R.id.detail_favorite && isFav){
             item.setIcon(R.drawable.ic_favourite_white);
-            AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                @Override
-                public void run() {
-                    mDatabase.tableDao().deleteMoviefromDB(movie);
-                    Log.i(LOG_TAG,"Delete movie from table is done");
-                }
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                mDatabase.tableDao().deleteMoviefromDB(movie);
+                Log.i(LOG_TAG,"Delete movie from table is done");
             });
         }
         if (item.getItemId() == android.R.id.home){
@@ -136,13 +133,10 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private void isFavMovie (int id){
         try {
             final LiveData<Movie> movieret = mDatabase.tableDao().loadMovie(id);
-            movieret.observe(this, new Observer<Movie>() {
-                @Override
-                public void onChanged(Movie movie) {
-                    if (movie != null){
-                            isFav = true;
-                            Log.d(LOG_TAG, movie.getMtitle() + " is inside fav list");
-                    }
+            movieret.observe(this, movie -> {
+                if (movie != null){
+                        isFav = true;
+                        Log.d(LOG_TAG, movie.getMtitle() + " is inside fav list");
                 }
             });
             } catch (Exception e) {

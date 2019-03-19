@@ -20,13 +20,11 @@ public class AppExecutors {
     private static final Object LOCK = new Object();
     private static AppExecutors sInstance;
     private final Executor diskIO;
-    private final Executor mainThread;
-    private final Executor networkIO;
 
     private AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread) {
         this.diskIO = diskIO;
-        this.networkIO = networkIO;
-        this.mainThread = mainThread;
+        Executor networkIO1 = networkIO;
+        Executor mainThread1 = mainThread;
     }
 
     public static AppExecutors getInstance() {

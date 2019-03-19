@@ -6,10 +6,6 @@
     <string name="detail_review_label">Review</string>
     <string name="detail_trailer_label">Trailer</string>
 
-    <!-- Strings related to Settings -->
-    <string name="sort_order">Sort order :</string>
-    <string name="title_activity_settings">Settings</string>
-
     <!--String related to menu-->
     <string name="settings">Settings</string>
 

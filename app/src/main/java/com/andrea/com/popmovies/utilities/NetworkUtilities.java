@@ -45,6 +45,7 @@ public final class NetworkUtilities {
     //Basic url for youtube video
     public static final String YOUTUBE = "https://www.youtube.com/watch?v=";
 
+    private NetworkUtilities() {}
 
     /**
      * Builds the URL used to retrieve the movie data. THe data
